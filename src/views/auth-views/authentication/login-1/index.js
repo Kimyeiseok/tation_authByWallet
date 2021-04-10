@@ -15,12 +15,12 @@ const LoginOne = props => {
 		<div className="h-100" style={backgroundStyle}>
 			<div className="container d-flex flex-column justify-content-center h-100">
 				<Row justify="center">
-					<Col xs={20} sm={20} md={20} lg={7}>
+					<Col  xs={20} sm={20} md={20} lg={7}>
 						<Card>
 							<div className="my-4">
 								<div className="text-center">
-									<img className="img-fluid" src={`/img/${theme === 'light' ? 'logo.png': 'logo-white.png'}`} alt="" />
-									<p>Don't have an account yet? <a href="/auth/register-1">Sign Up</a></p>
+									<img className="img-fluid" src={`/img/${theme === 'light' ? 'TACTION.png': 'logo-white.png'}`} alt="" />
+									<h5 style={{marginTop:'25px'}}>Log In to TACTION</h5>
 								</div>
 								<Row justify="center">
 									<Col xs={24} sm={24} md={20} lg={20}>

@@ -2,8 +2,17 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 import firebaseConfig from 'configs/FirebaseConfig';
+import ReduxSagaFirebase from 'redux-saga-firebase'
 
-firebase.initializeApp(firebaseConfig);
+
+
+
+
+//!firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
+
+const firebaseApp = !firebase.apps.length ? firebase.initializeApp(firebaseConfig) : firebase.app();
+const rsf = new ReduxSagaFirebase(firebaseApp)
+
 
 // firebase utils
 const db = firebase.firestore()
@@ -21,5 +30,6 @@ export {
 	googleAuthProvider,
 	facebookAuthProvider,
 	twitterAuthProvider,
-	githubAuthProvider
+	githubAuthProvider,
+	rsf
 };

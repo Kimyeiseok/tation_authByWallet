@@ -1,6 +1,7 @@
 import {
 	AUTH_TOKEN,
 	AUTHENTICATED,
+	SET_USER_INFO,
 	SHOW_AUTH_MESSAGE,
 	HIDE_AUTH_MESSAGE,
 	SIGNOUT_SUCCESS,
@@ -10,12 +11,25 @@ import {
   SIGNIN_WITH_FACEBOOK_AUTHENTICATED
 } from '../constants/Auth';
 
+
 const initState = {
   loading: false,
   message: '',
   showMessage: false,
   redirect: '',
   token: localStorage.getItem(AUTH_TOKEN),
+  userInfo: {
+		walletAddress: localStorage.getItem(AUTH_TOKEN),
+	    walletType : '',
+		name: '',
+		nationality: '',
+		gender: '',
+		division:'',
+		rankingPoint: '',
+		role: '',
+		Team: '',
+		profileImage: '',
+  },
 }
 
 const auth = (state = initState, action) => {
@@ -25,8 +39,14 @@ const auth = (state = initState, action) => {
 				...state,
 				loading: false,
 				redirect: '/',
-				token: action.token
+				token: action.token,
+				userInfo: action.userInfo
 			}
+		case SET_USER_INFO:
+			return {
+				...state,
+				userInfo: action.userInfo
+			}			
 		case SHOW_AUTH_MESSAGE: 
 			return {
 				...state,
@@ -45,7 +65,19 @@ const auth = (state = initState, action) => {
 				...state,
 				token: null,
 				redirect: '/',
-				loading: false
+				loading: false,
+				  userInfo: {
+						walletAddress: '',
+				        walletType : '',
+						name: '',
+						nationality: '',
+						gender: '',
+						division:'',
+						rankingPoint: '',
+						role: '',
+						Team: '',
+						profileImage: '',
+				  }
 			}
 		}
 		case SIGNUP_SUCCESS: {

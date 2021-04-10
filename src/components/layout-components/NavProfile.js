@@ -1,50 +1,43 @@
-import React from "react";
+import React  from "react";
 import { Menu, Dropdown, Avatar } from "antd";
-import { connect } from 'react-redux'
+
+import { useSelector, useDispatch } from 'react-redux'
+import { signOut,} from 'redux/actions/Auth';
 import { 
   EditOutlined, 
   SettingOutlined, 
-  ShopOutlined, 
-  QuestionCircleOutlined, 
   LogoutOutlined 
 } from '@ant-design/icons';
 import Icon from 'components/util-components/Icon';
-import { signOut } from 'redux/actions/Auth';
+
+
 
 const menuItem = [
 	{
 		title: "Edit Profile",
 		icon: EditOutlined ,
 		path: "/"
-    },
-    
+    },  
     {
 		title: "Account Setting",
 		icon: SettingOutlined,
 		path: "/"
     },
-    {
-		title: "Billing",
-		icon: ShopOutlined ,
-		path: "/"
-	},
-    {
-		title: "Help Center",
-		icon: QuestionCircleOutlined,
-		path: "/"
-	}
 ]
 
-export const NavProfile = ({signOut}) => {
-  const profileImg = "/img/avatars/thumb-1.jpg";
+export const NavProfile = (props) => {
+  const {userInfo} = useSelector(state => state.auth)
+    const dispatch = useDispatch()
+
+
   const profileMenu = (
     <div className="nav-profile nav-dropdown">
       <div className="nav-profile-header">
         <div className="d-flex">
-          <Avatar size={45} src={profileImg} />
+          <Avatar size={45} src={userInfo && userInfo.profileImage} />
           <div className="pl-3">
-            <h4 className="mb-0">Charlie Howard</h4>
-            <span className="text-muted">Frontend Developer</span>
+            <h4 className="mb-0">{userInfo && userInfo.walletAddress.substring(0,6)+'...'+ userInfo.walletAddress.substring(38,42)}</h4>
+            <span className="text-muted">{userInfo && userInfo.walletType}</span>
           </div>
         </div>
       </div>
@@ -60,7 +53,7 @@ export const NavProfile = ({signOut}) => {
               </Menu.Item>
             );
           })}
-          <Menu.Item key={menuItem.legth + 1} onClick={e => signOut()}>
+          <Menu.Item key={menuItem.legth + 1} onClick={e => dispatch(signOut())}>
             <span>
               <LogoutOutlined className="mr-3"/>
               <span className="font-weight-normal">Sign Out</span>
@@ -74,11 +67,13 @@ export const NavProfile = ({signOut}) => {
     <Dropdown placement="bottomRight" overlay={profileMenu} trigger={["click"]}>
       <Menu className="d-flex align-item-center" mode="horizontal">
         <Menu.Item>
-          <Avatar src={profileImg} />
+          <Avatar src={userInfo && userInfo.profileImage} />
         </Menu.Item>
       </Menu>
     </Dropdown>
   );
 }
 
-export default connect(null, {signOut})(NavProfile)
+
+
+export default NavProfile

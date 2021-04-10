@@ -1,7 +1,9 @@
 import { all, takeEvery, put, fork, call } from 'redux-saga/effects';
 import {
 	AUTH_TOKEN,
+	WALLET_TYPE,
 	SIGNIN,
+	SIGNIN_WALLET,
 	SIGNOUT,
 	SIGNUP,
 	SIGNIN_WITH_GOOGLE,
@@ -16,6 +18,7 @@ import {
 	signInWithFacebookAuthenticated
 } from "../actions/Auth";
 
+import {rsf} from 'auth/FirebaseAuth'
 import FirebaseService from 'services/FirebaseService'
 
 export function* signInWithFBEmail() {
@@ -35,16 +38,62 @@ export function* signInWithFBEmail() {
 	});
 }
 
+export function* signInWithWalletSaga() {
+  yield takeEvery(SIGNIN_WALLET, function* ({payload}) {
+		const {walletAddress, walletType} = payload;
+
+	    try{
+			const userInfo = yield call(FirebaseService.dbGetAccount, walletAddress);
+			
+			if (userInfo){
+				localStorage.setItem(AUTH_TOKEN, walletAddress);
+				localStorage.setItem(WALLET_TYPE, walletType);
+				yield put(authenticated(walletAddress));
+			}else{
+				yield call(FirebaseService.dbCreateAccount, walletAddress, walletType);
+				localStorage.setItem(AUTH_TOKEN, walletAddress);
+				localStorage.setItem(WALLET_TYPE, walletType);
+				yield put(authenticated(walletAddress));
+			}
+			
+		}catch(err){
+			yield put(showAuthMessage(err));
+		}    
+	});
+}
+
+// export function* signInWithWalletSaga() {
+//   yield takeEvery(SIGNIN_WALLET, function* ({payload}) {
+// 		const {walletAddress, walletType} = payload;
+
+// 	    try{
+// 			const userInfoSnapshot = yield call(rsf.firestore.getDocument, `users/${walletAddress}`);
+//   		    const userInfo = userInfoSnapshot.data();
+			
+// 			if (userInfo){
+// 				localStorage.setItem(AUTH_TOKEN, walletAddress);
+// 				localStorage.setItem(WALLET_TYPE, walletType);
+// 				yield put(authenticated(walletAddress));
+// 			}else{
+// 				yield call(FirebaseService.dbCreateAccount, walletAddress, walletType);
+// 				localStorage.setItem(AUTH_TOKEN, walletAddress);
+// 				localStorage.setItem(WALLET_TYPE, walletType);
+// 				yield put(authenticated(walletAddress));
+// 			}
+			
+// 		}catch(err){
+// 			yield put(showAuthMessage(err));
+// 		}    
+// 	});
+// }
+
 export function* signOut() {
   yield takeEvery(SIGNOUT, function* () {
 		try {
-			const signOutUser = yield call(FirebaseService.signOutRequest);
-			if (signOutUser === undefined) {
-				localStorage.removeItem(AUTH_TOKEN);
-				yield put(signOutSuccess(signOutUser));
-			} else {
-				yield put(showAuthMessage(signOutUser.message));
-			}
+			localStorage.removeItem(AUTH_TOKEN);
+			localStorage.removeItem(WALLET_TYPE);
+			yield put(signOutSuccess());
+
 		} catch (err) {
 			yield put(showAuthMessage(err));
 		}
@@ -104,6 +153,7 @@ export function* signInWithFacebook() {
 export default function* rootSaga() {
   yield all([
 		fork(signInWithFBEmail),
+	    fork(signInWithWalletSaga),
 		fork(signOut),
 		fork(signUpWithFBEmail),
 		fork(signInWithFBGoogle),

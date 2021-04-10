@@ -1,5 +1,11 @@
 {
 	"home": "Home",
+	"Dashboard" : "Dashboard",
+	"Wallet" : "Wallet",
+	"Userlist" : "Userlist",
+	"Match" : "Match",
+	"Reporting Match" :"Reporting Match",
+	"Match To Confirm" : "Match To Confirm",
 	
 	"sidenav.dashboard": "Dashboard",
 	"sidenav.dashboard.default": "Default",
