@@ -8,6 +8,7 @@ const Dashboards = ({ match }) => {
     <Switch>
       <Route path={`${match.url}/wallet`} component={lazy(() => import(`./wallet`))} />
       <Route path={`${match.url}/userlist`} component={lazy(() => import(`./userlist`))} />
+	  <Route path={`${match.url}/editProfile`} component={lazy(() => import(`./editProfile`))} />
       <Redirect from={`${match.url}`} to={`${match.url}/wallet`} />
     </Switch>
   </Suspense>

@@ -16,7 +16,7 @@ const menuItem = [
 	{
 		title: "Edit Profile",
 		icon: EditOutlined ,
-		path: "/"
+		path: "/app/dashboard/editProfile"
     },  
     {
 		title: "Account Setting",
@@ -29,6 +29,7 @@ export const NavProfile = (props) => {
   const {userInfo} = useSelector(state => state.auth)
     const dispatch = useDispatch()
 
+    const walletAddressShort = userInfo? userInfo.walletAddress.substring(0,6)+'...'+ userInfo.walletAddress.substring(38,42) : 'no address'
 
   const profileMenu = (
     <div className="nav-profile nav-dropdown">
@@ -36,7 +37,7 @@ export const NavProfile = (props) => {
         <div className="d-flex">
           <Avatar size={45} src={userInfo && userInfo.profileImage} />
           <div className="pl-3">
-            <h4 className="mb-0">{userInfo && userInfo.walletAddress.substring(0,6)+'...'+ userInfo.walletAddress.substring(38,42)}</h4>
+            <h4 className="mb-0">{walletAddressShort}</h4>
             <span className="text-muted">{userInfo && userInfo.walletType}</span>
           </div>
         </div>

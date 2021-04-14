@@ -2,6 +2,7 @@ export const SIGNIN = 'SIGNIN';
 export const SIGNIN_WALLET ='SIGNIN_WALLET'
 export const AUTHENTICATED = 'AUTHENTICATED';
 export const SET_USER_INFO = 'SET_USER_INFO'
+export const UPDATE_USER_INFO ='UPDATE_USER_INFO'
 export const SIGNOUT = 'SIGNOUT';
 export const SIGNOUT_SUCCESS = 'SIGNOUT_SUCCESS'
 export const SIGNUP = 'SIGNUP';

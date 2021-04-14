@@ -7,7 +7,7 @@ import {
 	CheckCircleOutlined,
 	LoadingOutlined
 } from '@ant-design/icons';
-import { Spin, Button, Modal } from 'antd';
+import { Spin, Button, Modal, message } from 'antd';
 import Portis from '@portis/web3';
 import Web3 from 'web3'
 //import {tac_contract, CoopDataAddress} from 'services/AddAndABI'
@@ -31,13 +31,13 @@ const ApprovedPending = ({address, TACApproveTxhash}) => {
 
 	const approveTAC = async (address) => {
 			setIsModalVisible(true)
-		    await TacContract.approve(address, modalOff)
+		    await TacContract.approve(address, modalOff, message)
 		}
 
 	return(
 		<>
-		 <Button className="mb-2 bt-2" type="primary" icon= {<CloseCircleOutlined />} size='small' onClick={()=>{approveTAC(address)}} danger block>
-			TAC Approval
+		<Button className="mb-2 bt-2" icon= {<CheckCircleOutlined />} size='small' danger loading  block  >
+			Pending on BlockChain
 		 </Button>
 			<Modal title="Approving TAC" 
 				   visible={isModalVisible} 
@@ -63,7 +63,7 @@ const ApprovedNo = ({address, TACApproveTxhash}) => {
 
 	const approveTAC = async (address) => {
 			setIsModalVisible(true)
-		    await TacContract.approve(address, modalOff)
+		    await TacContract.approve(address, modalOff, message)
 		}
 
 	return(

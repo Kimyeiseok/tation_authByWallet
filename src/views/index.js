@@ -38,13 +38,13 @@ export const Views = (props) => {
   const dispatch = useDispatch()
 	
   const getUserInfo = async (token) => {
-       await  db.collection("users").doc(token).onSnapshot((doc) => {
-		  dispatch(setUserInfo(doc.data()))
+  await  db.collection("users").doc(token).onSnapshot((doc) => {
+  dispatch(setUserInfo(doc.data()))
    		 });
   }
   
     useEffect(() => {
-	  token && getUserInfo(token); 
+  token && getUserInfo(token); 
     }, [token]);	
 	
   

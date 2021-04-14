@@ -7,7 +7,7 @@ import {
 	CheckCircleOutlined,
 	LoadingOutlined,
 } from '@ant-design/icons';
-import { Spin, Button, Modal } from 'antd';
+import { Spin, Button, Modal, message } from 'antd';
 import Portis from '@portis/web3';
 import Web3 from 'web3'
 //  import {coopData_contract} from 'services/AddAndABI'
@@ -19,7 +19,6 @@ const RegisteredYes = () => {
 	return(
 		<>
 		<Button className="mb-2 bt-2" type="primary"  icon= {<CheckCircleOutlined />} size='small'  block ghost >
-
 			User Confirmed
 		 </Button>
 		</>
@@ -33,7 +32,7 @@ const RegisteredPending = ({address, userRegisterTxhash}) => {
 	
 		const registerUser = async (address) => {
 				    setIsModalVisible(true)
-				    await CoopDataContract.setUser(address, modalOff)
+				    await CoopDataContract.setUser(address, modalOff, message)
 				}	
 	return(
 		<>
@@ -48,6 +47,7 @@ const RegisteredPending = ({address, userRegisterTxhash}) => {
 		   >
 		  <LoadingOutlined /> 
 		  <span className="ml-2"> Confirm Again?</span>
+		  <p>TxHash: {userRegisterTxhash} </p>
 		  <p>Confirmation on BlockChain might takes some time to show your wallet successfully</p>
 		  <p>Do you really want to confirm again? It will charge another gas fee.</p>
 		</Modal>
@@ -61,7 +61,7 @@ const RegisteredNo = ({address}) => {
 	
 			const registerUser = async (address) => {
 				    setIsModalVisible(true)
-				    await CoopDataContract.setUser(address, modalOff)
+				    await CoopDataContract.setUser(address, modalOff, message)
 				}	
 			
 	return(
@@ -104,13 +104,13 @@ const IsUserRegistered = () => {
   return (
     <>
 	{!isRegistered &&
-	     <Button className="mb-2 bt-2" type="primary"   size='small' loading block> User Confirmation</Button>}
+	     <Button className="mb-2 bt-2" type="primary"   size='small' loading block> User Confirmation</Button>}   
 
-	{isRegistered && (isRegistered=='0x0000000000000000000000000000000000000000') && !userRegisterTxhash&& 
+	{isRegistered && (isRegistered=='0x0000000000000000000000000000000000000000') && !userRegisterTxhash&&          
 	  <RegisteredNo address={address} />}
-	{isRegistered && (isRegistered=='0x0000000000000000000000000000000000000000') && userRegisterTxhash&& 
+	{isRegistered && (isRegistered=='0x0000000000000000000000000000000000000000') && userRegisterTxhash&&    
 		<RegisteredPending address={address} userRegisterTxhash={userRegisterTxhash}/>}
-	{isRegistered && (isRegistered !=='0x0000000000000000000000000000000000000000') && <RegisteredYes />}
+	{isRegistered && (isRegistered !=='0x0000000000000000000000000000000000000000') && <RegisteredYes />}  
 		 
     </>
   )

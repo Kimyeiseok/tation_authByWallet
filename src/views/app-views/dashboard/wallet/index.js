@@ -5,6 +5,7 @@ import WalletWidget from './WalletWidget';
 import UniswapService from 'services/UniswapService'
 import AssetWidget from './AssetWidget'
 import  {getTacWethPair, getWalletBalance}  from 'redux/actions/Uniswap'
+import TactionAddress from './TactionAddress'
 
 
 import { db, auth } from 'auth/FirebaseAuth';
@@ -52,6 +53,11 @@ const Wallet = () => {
 				<AssetWidget USDCTACpair={USDCTACpair} USDCWETHPair={USDCWETHPair}  TACWETHPair={TACWETHPair}  tacBalance={tacBalance} etherBalance={etherBalance}/>
 			</Col>	
 		</Row>
+		<Row justify="center" gutter={16}>
+			<Col xs={24} sm={24} md={24} lg={8}>	
+				<TactionAddress />
+			</Col>	
+		</Row>		
 
 
 

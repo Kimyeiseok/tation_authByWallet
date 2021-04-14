@@ -2,7 +2,8 @@ import {
   SIGNIN,
   SIGNIN_WALLET,
   AUTHENTICATED,
-SET_USER_INFO,
+  SET_USER_INFO,
+	UPDATE_USER_INFO,
   SIGNOUT,
   SIGNOUT_SUCCESS,
   SHOW_AUTH_MESSAGE,
@@ -30,17 +31,26 @@ export const signInwithWallet = (payload) => {
 	}
 }
 
-export const authenticated = (token) => {
+export const authenticated = (token, userInfo) => {
   return {
     type: AUTHENTICATED,
     token,
+	userInfo,
   }
 };
+
 
 export const setUserInfo = (userInfo) => {
   return {
     type: SET_USER_INFO,
     userInfo
+  }
+};
+
+export const updateUserInfo = (payload) => {
+  return {
+    type: UPDATE_USER_INFO,
+    payload
   }
 };
 

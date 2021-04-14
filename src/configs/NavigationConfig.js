@@ -6,9 +6,9 @@ import { APP_PREFIX_PATH } from 'configs/AppConfig'
 const dashBoardNavTree = [
 
 {
-  key: 'Dashboard',
+  key: 'dashboards',
   path: `${APP_PREFIX_PATH}/dashboard`,
-  title: 'Dashboard',
+  title: 'sidenav.dashboard',
   icon: DashboardOutlined,
   breadcrumb: false,
   submenu: [
