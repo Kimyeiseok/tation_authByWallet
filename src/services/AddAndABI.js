@@ -5,7 +5,7 @@ import Web3 from 'web3'
 //const portis = new Portis('0fccffb3-5cff-4c61-8cca-59ee4e9e9894', 'mainnet');
 import { TACVotingABI, TACVotingAddress,CoopDataABI, CoopDataAddress, TACLockupABI, TACLockupAddress, TACABI, TACAddress} from './AddAndABISrc_testnet'; 
 import FirebaseService from 'services/FirebaseService'
-import { Button, notification } from 'antd';
+import { Button, notification, message } from 'antd';
 import {txHashNotification, errorNotification} from 'components/shared-components/notifications'
 const portis = new Portis('0fccffb3-5cff-4c61-8cca-59ee4e9e9894', 'rinkeby');
 
@@ -14,22 +14,29 @@ const walletType = localStorage.getItem(WALLET_TYPE);
 // let web3js
 // if(walletType == 'Portis'){
 // 	 web3js = new Web3(portis.provider);
+// 	console.log('Hi Portis')
 // }else if(walletType == 'MetaMask'){
 // 	 web3js = new Web3(window.ethereum);
+// 	console.log('Hi Metamask')
 // }
 const web3js = new Web3(portis.provider);
-console.log(web3js)
+ console.log('web3 provider', web3js)
 
 export {TACAddress, CoopDataAddress, TACLockupAddress, TACVotingAddress}
 
-export const tacVoting_contract = new web3js.eth.Contract(TACVotingABI, TACVotingAddress);
-export const coopData_contract = new web3js.eth.Contract(CoopDataABI, CoopDataAddress);
-export const tacLockup_contract = new web3js.eth.Contract(TACLockupABI, TACLockupAddress);
-export const tac_contract = new web3js.eth.Contract(TACABI, TACAddress);
-// export const getReceipt = new web3.eth.getTransactionReceipt(
-//   "0xbb93d82a1766bc44574409a35be5a218f77df507c1dd82a9c9fd3cdf041e47ad", (txR) => {
-//   console.log(txR);}
-// )
+// export const tacVoting_contract = new web3js.eth.Contract(TACVotingABI, TACVotingAddress);
+// export const coopData_contract = new web3js.eth.Contract(CoopDataABI, CoopDataAddress);
+// export const tacLockup_contract = new web3js.eth.Contract(TACLockupABI, TACLockupAddress);
+// export const tac_contract = new web3js.eth.Contract(TACABI, TACAddress);
+
+ const tacVoting_contract =  new web3js.eth.Contract(TACVotingABI, TACVotingAddress);
+ const coopData_contract =  new web3js.eth.Contract(CoopDataABI, CoopDataAddress);
+ const tacLockup_contract =  new web3js.eth.Contract(TACLockupABI, TACLockupAddress);
+ const tac_contract =  new web3js.eth.Contract(TACABI, TACAddress);
+	
+
+
+
 
 
 export const CoopDataContract = {}
@@ -39,15 +46,22 @@ CoopDataContract.proposeMatch = async (winnerAddress, winnerPoints, loserAddress
 	 await coopData_contract.methods.proposeMatch(winnerAddress,winnerPoints,loserAddress,loserPoints,refereeAddress, matchResult )
 						  .send({ from: refereeAddress })
 						  .on("transactionHash", async (Txhash) => {
-							message.info('TxHash Published', Txhash)
+							 txHashNotification(Txhash)
 							await FirebaseService.refereeTxHash(refereeAddress, Txhash, message, modalOff, onDiscard)
 						  })
 						  .on('error', function(error){
-							 message.error('Transaction failed or canceled')
+							errorNotification(error.message)
+							console.log( error)
 		        			 modalOff()
 						  })
 	
 }
+
+CoopDataContract.numMatches = async () =>
+			await coopData_contract.methods.numMatches().call().then(res => res)
+
+CoopDataContract.getMatch = async (matchId) =>
+			await coopData_contract.methods.getMatch(matchId).call().then(res => res)
 
 CoopDataContract.getUserMatches = async (address) =>
 			await coopData_contract.methods.getUserMatches(address).call().then(res => res)
@@ -57,14 +71,17 @@ CoopDataContract.getProposedMatchData = async (proposedMatchId) =>
 
 
 //ApproveMatch
-CoopDataContract.approveProposedMatch = async (address, id, isUserWinner, message) =>
+CoopDataContract.approveProposedMatch = async (address, id, isUserWinner, setIsModalVisible) =>
            await coopData_contract.methods.approveMatch(id).send({ from: address})
            .on("error", function(error){
-           message.error('Transaction failed or canceled')
+			errorNotification(error.message)
+			console.log( error)
+			setIsModalVisible(false)
            })
            .on("transactionHash", async (Txhash)=> {
-            message.info('TxHash Published')
-			await FirebaseService.dbUpdateProposedMatchTxHash(address, id, isUserWinner, message, Txhash)
+            txHashNotification(Txhash)
+			await FirebaseService.dbUpdateProposedMatchTxHash(address, id, isUserWinner, Txhash)
+	 		setIsModalVisible(false)
            })
 
 CoopDataContract.setUser = async (address, modalOff, message) =>
@@ -73,7 +90,7 @@ CoopDataContract.setUser = async (address, modalOff, message) =>
        				     .send({ from: address, gas: '0x1CD4C'})
 					  .on("transactionHash", async (Txhash) =>{
 						 console.log("pending");
-						 console.log(Txhash)
+						 txHashNotification(Txhash)
 						 await FirebaseService.dbUpdateUserRegisterTxhash(address, Txhash, message, modalOff)
 						 modalOff()
 					  })
@@ -82,7 +99,8 @@ CoopDataContract.setUser = async (address, modalOff, message) =>
 						 console.log(receipt)
 					  })
 					  .on('error', function(error){
-						message.error('Transaction failed or canceled')
+						errorNotification(error.message)
+						console.log( error)
 						modalOff()
 					  })
 
@@ -111,7 +129,8 @@ TacContract.approve = async (address, modalOff, message) =>
 			 console.log(receipt)
 			})
 			.on('error', function(error){
-			errorNotification()
+			errorNotification(error.message)
+			console.log( error)
 			modalOff()
 			})
 
@@ -133,6 +152,22 @@ TacContract.transfer = async (address, recipient, amount, modalOff, setLoading) 
 			})
 			.on('error', function(error){
 	  		setLoading(false);
-			errorNotification()
-			})					  
+			errorNotification(error.message)
+			console.log( error)
+			})					 
 
+TacContract.getTACUnlocked = async (address) => 
+	await tac_contract.methods
+		.balanceOf(address)
+			.call()
+		.then(res => res)
+
+
+
+export const TacLockupContract = {}
+
+TacLockupContract.getTACLocked = async (address) => 
+	await tacLockup_contract.methods
+		.getTACLocked(address)
+			.call()
+		.then(res => res)

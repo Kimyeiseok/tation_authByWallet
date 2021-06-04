@@ -9,8 +9,8 @@ import {
 import { Spin, Button, } from 'antd';
 import Portis from '@portis/web3';
 import Web3 from 'web3'
-import {tac_contract, CoopDataAddress} from 'services/AddAndABI'
-
+//import {tac_contract, CoopDataAddress} from 'services/AddAndABI'
+import {TacContract} from 'services/AddAndABI'
 
 
 		const ApprovedYes = () => {
@@ -40,10 +40,11 @@ const IsTACApproved = ({address}) => {
 	const [isApproved, setIsApproved] = useState(false)
 		
 	const checkIfApproved = async (address) => {
-		await tac_contract.methods
-		  .allowance(address, CoopDataAddress)
-          .call()
-		  .then(res => setIsApproved(res))
+		// await tac_contract.methods
+		//   .allowance(address, CoopDataAddress)
+		// .call()
+		//   .then(res => setIsApproved(res))
+		await TacContract.allowance(address).then(res => setIsApproved(res))
 	}
 
 	useEffect(()=>{

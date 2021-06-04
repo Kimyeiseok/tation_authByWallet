@@ -22,7 +22,7 @@ const ConnectToPortis = () => {
 	  };	
 	
 	useEffect(()=>{
-		portis.logout()
+		//portis.logout()
 	},[])
 	
 	return (

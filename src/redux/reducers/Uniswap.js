@@ -25,7 +25,8 @@ const uniswap = (state = initState, action) => {
 			return {
 				...state,
 				tacBalance: action.payload.tacBalance,
-				etherBalance: action.payload.etherBalance
+				etherBalance: action.payload.etherBalance,
+				tacLockedBalance: action.payload.tacLockedBalance
 			}	
 		default:
 			return state;

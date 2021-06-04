@@ -6,6 +6,7 @@ import {updateUserInfo} from "redux/actions/Auth";
 import { Row, Col, Button, Card, Avatar, Dropdown, Table, Menu, Tag, Form, Input, InputNumber, message, Select, } from 'antd';
 import countryList from 'react-select-country-list'
 import CountrySelector from './CountrySelector'
+import EditProfileImage from './EditProfileImage'
 const { Option } = Select;
 
 const EditProfile = () => {
@@ -40,8 +41,9 @@ const EditProfile = () => {
 		
 	return (
 		<>		
+		
 		 <Form  onFinish={onFinish} layout="vertical" className="ant-advanced-search-form" form={form} >
-			<PageHeaderAlt className="border-bottom" >
+			<PageHeaderAlt className="border-bottom mb-5" >
 					<div className="container">
 						<Flex className="py-2" mobileFlex={false} justifyContent="between" alignItems="center">
 							<h2 className="mb-3">Edit Profile</h2>
@@ -53,8 +55,12 @@ const EditProfile = () => {
 						</Flex>
 					</div>
 			</PageHeaderAlt>
-		<div className="container">
+			
+		<div className="container">		
 		 <Row  justify="center" gutter={16}>
+			 <Col xs={24} sm={24} md={24} lg={12}>
+				 <EditProfileImage />
+			 </Col>
        		 <Col xs={24} sm={24} md={24} lg={12}>
 				 <Card title="Basic Info">
 					<Form.Item name="name" label="Name" colon={false}

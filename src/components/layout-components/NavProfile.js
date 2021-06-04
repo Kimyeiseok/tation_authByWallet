@@ -18,11 +18,11 @@ const menuItem = [
 		icon: EditOutlined ,
 		path: "/app/dashboard/editProfile"
     },  
-    {
-		title: "Account Setting",
-		icon: SettingOutlined,
-		path: "/"
-    },
+		// {
+		// title: "Account Setting",
+		// icon: SettingOutlined,
+		// path: "/"
+		// },
 ]
 
 export const NavProfile = (props) => {
@@ -55,9 +55,9 @@ export const NavProfile = (props) => {
             );
           })}
           <Menu.Item key={menuItem.legth + 1} onClick={e => dispatch(signOut())}>
-            <span>
-              <LogoutOutlined className="mr-3"/>
-              <span className="font-weight-normal">Sign Out</span>
+            <span className="font-weight-semibold text-danger">
+              <LogoutOutlined className="mr-3" width="2rem"/>
+              <span >Sign Out</span>
             </span>
           </Menu.Item>
         </Menu>

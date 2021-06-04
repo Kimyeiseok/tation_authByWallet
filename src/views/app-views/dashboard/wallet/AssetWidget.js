@@ -9,25 +9,26 @@ import  {getTacWethPair}  from 'redux/actions/Uniswap'
 
 
 
-const AssetWidget = ({USDCTACpair, USDCWETHPair, TACWETHPair, tacBalance, etherBalance}) => {
+const AssetWidget = ({USDCTACpair, USDCWETHPair, TACWETHPair, tacBalance, etherBalance, tacLockedBalance}) => {
 
 	
 
 	const tacBalanceFixed = tacBalance && tacBalance.toFixed(3)
 	const tacBalanceInteger = tacBalance && Math.floor(tacBalance)
 	const tacBalanceDecimal = tacBalance &&  Math.floor( (tacBalance-Math.floor(tacBalance))*1000  ) 
-	 const tacBalanceToDollar = tacBalance && USDCTACpair &&  (tacBalance * USDCTACpair).toFixed(2)
+	const tacBalanceToDollar = tacBalance && USDCTACpair &&  (tacBalance * USDCTACpair).toFixed(2)
 
-	
+	const tacLockedBalance_ether = tacLockedBalance && tacLockedBalance/Math.pow(10, 18)
+	const tacLockedBalancetoDollar = tacLockedBalance && USDCTACpair &&  (tacLockedBalance_ether * USDCTACpair).toFixed(2)
 
 	const etherBalanceFixed = etherBalance&& etherBalance.toFixed(3)
 	const etherBalanceDollor = etherBalance&& USDCWETHPair&& (etherBalance* USDCWETHPair).toFixed(2)
 	
 
     
-		useEffect(()=>{
-	  console.log(etherBalance)
-	},[etherBalance])
+	useEffect(()=>{
+	  console.log(tacLockedBalance)
+	},[tacLockedBalance])
 	
 	return (
 		<Card title='My Assets'>
@@ -43,10 +44,13 @@ const AssetWidget = ({USDCTACpair, USDCWETHPair, TACWETHPair, tacBalance, etherB
 				</div>
 			</div>
 			<div className={`d-flex align-items-center justify-content-between mb-4`}>
-				<CryptoStatus name={'Taekwondo Access Credit(Locked)'}  text={<LockOutlined className='text-dark' />} amount={'수정필요'} coin={'TAC'} price={USDCTACpair}/>
+				<CryptoStatus name={'Taekwondo Access Credit(Locked)'}  text={<LockOutlined className='text-dark' />} amount={tacLockedBalance_ether} coin={'TAC'} price={USDCTACpair}/>
 				<div>
-					<div className="avatar-status-name text-success" > 　</div>							
-					<div className=" avatar-status-name">$수정필요</div>	
+					<div className="avatar-status-name text-success" > 　</div>	
+					{(tacLockedBalancetoDollar !=null )?
+					<div className=" avatar-status-name">${tacLockedBalancetoDollar}</div>	
+						: <LoadingOutlined className = 'avatar-status-name' spin />
+						}					
 				</div>
 			</div>
 			<div className={`d-flex align-items-center justify-content-between mb-4`}>

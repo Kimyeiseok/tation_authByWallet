@@ -9,7 +9,8 @@ import {
 import { Spin, Button, } from 'antd';
 import Portis from '@portis/web3';
 import Web3 from 'web3'
-import {coopData_contract} from 'services/AddAndABI'
+//import {coopData_contract} from 'services/AddAndABI'
+ import {CoopDataContract} from 'services/AddAndABI'
 
 
 const RegisteredYes = () => {
@@ -40,9 +41,10 @@ const IsUserRegistered = ({address}) => {
 	
 	const [isRegistered, setIsRegistered] = useState(false)
 	const checkIfRegistered = async (address) => {
-	await coopData_contract.methods
-	.getUser(address)
-	.call().then(res => setIsRegistered(res.userAddress));
+	// await coopData_contract.methods
+	// .getUser(address)
+	// .call().then(res => setIsRegistered(res.userAddress));
+		await CoopDataContract.getUser(address).then(res => setIsRegistered(res.userAddress))
 	}
 
 	useEffect(()=>{

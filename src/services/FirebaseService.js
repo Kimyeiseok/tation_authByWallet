@@ -71,22 +71,22 @@ FirebaseService.ProposedMatchTxHash = async (matchId) =>
 
 
 
-FirebaseService.dbUpdateProposedMatchTxHash = async (address, matchId, isUserWinner, message, Txhash) => {
+FirebaseService.dbUpdateProposedMatchTxHash = async (address, matchId, isUserWinner, Txhash) => {
 	if(isUserWinner){
 		await db.collection("proposedMatch").doc(matchId).set({
 			winnerTx: Txhash,
 		}, { merge: true }).then(()=>{
-			 message.success('Updated Successfully')
+			console.log('success')
 		 }).catch(function(error) {
-		     message.error("Error adding document: ", error);
+		    console.log('error')
 		 })		
 	}else{
 		await db.collection("proposedMatch").doc(matchId).set({
 			loserTx: Txhash,
 		}, { merge: true }).then(()=>{
-			 message.success('Updated Successfully')
+			 console.log('Updated Successfully')
 		 }).catch(function(error) {
-		     message.error("Error adding document: ", error);
+		    console.log("Error adding document");
 		 })		
 	}
 }
@@ -100,7 +100,7 @@ FirebaseService.refereeTxHash = async (refereeAddress, txHash, message, modalOff
 		     modalOff();
 		    onDiscard();
 		 }).catch(function(error) {
-		     message.error("Error adding document: ", error);
+		     message.error("Error adding document");
 		 	modalOff()
 		 });
 };

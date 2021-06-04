@@ -135,11 +135,11 @@ const ReportingMatch = () => {
 			 </Col>			 
        		 <Col xs={24} sm={24} md={24} lg={7}>
 				 <Card title="WIN">
-					<Form.Item name="winnerPoints" label="Points" colon={false}
+					<Form.Item name="winnerPoints" label="Score" colon={false}
 						rules={[
 							  {
 								required: true,
-								message: 'Please input points of winner!',
+								message: 'Please input Score of winner!',
 							  },
 							]}
 						>
@@ -163,11 +163,11 @@ const ReportingMatch = () => {
 			 </Col>
 			 <Col xs={24} sm={24} md={24} lg={7}>
 			  <Card title="LOSE">
-				<Form.Item name="loserPoints" label="Points" colon={false}
+				<Form.Item name="loserPoints" label="Score" colon={false}
 					rules={[
 							  {
 								required: true,
-								message: 'Please input points of loser!',
+								message: 'Please input Score of loser!',
 							  },
 							]}
 					>  

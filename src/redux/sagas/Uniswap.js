@@ -14,6 +14,7 @@ import {
 
 import UniswapService from 'services/UniswapService'
 import {getTacBalance, getEtherBalance} from 'services/EtherScanService'
+import {TacLockupContract, TacContract}  from 'services/AddAndABI'
 
 export function* getTacWethPairSaga() {
   yield takeEvery(GET_TAC_WETH_PAIR, function* ({address}) {
@@ -32,9 +33,14 @@ export function* getTacWethPairSaga() {
 export function* getWalletBalanceSaga() {
   yield takeEvery(GET_WALLET_BALANCE, function* ({address}) {
 		try {
-			const tacBalance = yield call(getTacBalance, address)
+			//const tacBalance = yield call(getTacBalance, address);
+			const tacLockedBalance = yield call(TacLockupContract.getTACLocked, address);
+			const tacBalance_wei = yield call(TacContract.getTACUnlocked, address);
+			const tacBalance = tacBalance_wei/Math.pow(10, 18)
+			console.log(tacBalance)
+
 			const etherBalance = yield call(getEtherBalance, address)
-			yield put(updateWalletBalance({tacBalance, etherBalance}));
+			yield put(updateWalletBalance({tacBalance, etherBalance, tacLockedBalance}));
 
 		} catch (err) {
 		}

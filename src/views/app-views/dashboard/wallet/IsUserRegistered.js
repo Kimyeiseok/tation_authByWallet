@@ -10,7 +10,6 @@ import {
 import { Spin, Button, Modal, message } from 'antd';
 import Portis from '@portis/web3';
 import Web3 from 'web3'
-//  import {coopData_contract} from 'services/AddAndABI'
  import {CoopDataContract} from 'services/AddAndABI'
 
 
@@ -77,7 +76,7 @@ const RegisteredNo = ({address}) => {
 		   >
 		  <LoadingOutlined /> 
 		  <span className="ml-2"> Now Loading Wallet.</span>
-		  <p>It might takes few seconds to show your wallet successfully</p>
+		  <p>It might take few seconds to show your wallet successfully</p>
 		</Modal>
 		</>
 	)

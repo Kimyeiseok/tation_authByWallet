@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/storage';
 import firebaseConfig from 'configs/FirebaseConfig';
 import ReduxSagaFirebase from 'redux-saga-firebase'
 
@@ -17,7 +18,8 @@ const rsf = new ReduxSagaFirebase(firebaseApp)
 // firebase utils
 const db = firebase.firestore()
 const auth = firebase.auth();
-const currentUser = auth.currentUser
+const currentUser = auth.currentUser;
+const storage = firebase.storage()
 const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 const facebookAuthProvider = new firebase.auth.FacebookAuthProvider();
 const twitterAuthProvider = new firebase.auth.TwitterAuthProvider();
@@ -27,6 +29,7 @@ export {
 	db,
 	auth,
 	currentUser,
+	storage,
 	googleAuthProvider,
 	facebookAuthProvider,
 	twitterAuthProvider,

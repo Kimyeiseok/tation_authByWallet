@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
-import { Row, Col, Button, Card, Avatar, Dropdown, Table, Menu, Tag, Spin } from 'antd';
+import { Row, Col, Button, Card, Avatar, Dropdown, Table, Menu, Tag, Spin, message, Typography } from 'antd';
 import { ArrowUpOutlined, ArrowDownOutlined, CopyOutlined, FolderOpenOutlined, StopTwoTone, EllipsisOutlined, LoadingOutlined, SlidersOutlined, LineChartOutlined } from '@ant-design/icons';
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { UniswapSVG, FacebookSVG} from 'assets/svg/icon';
 import CustomIcon from 'components/util-components/CustomIcon'
 import { useSelector, useDispatch  } from 'react-redux'
@@ -11,18 +12,11 @@ import IsTACApproved from './IsTACApproved'
 import Transfer from './Transfer'
 
 const WalletWidgetOption = () => {
-		
+    
+	
 	return(
   <Menu>
-    <Menu.Item key="0">
-      <span>
-        <div className="d-flex align-items-center">
-          <CopyOutlined />
-          <span className="ml-3 ">Copy Address</span>
-        </div>
-      </span>
-    </Menu.Item>
-	<Menu.Item key="1" onClick={ () => {}}>
+	<Menu.Item key="0" onClick={ () => message.warning('Under Construction')}>
       <span>
         <div className="d-flex align-items-center">
           <FolderOpenOutlined />
@@ -30,7 +24,7 @@ const WalletWidgetOption = () => {
         </div>
       </span>
     </Menu.Item>	
-    <Menu.Item key="2" onClick={ () => {}  }>
+    <Menu.Item key="1" onClick={ () => {}  }>
       <span>
         <div className="d-flex align-items-center">
 			<a href='https://info.uniswap.org/token/0xdeeb6091a5adc78fa0332bee5a38a8908b6b566e' target="_blank">
@@ -40,7 +34,7 @@ const WalletWidgetOption = () => {
         </div>
       </span>
     </Menu.Item>
-	 <Menu.Item key="3" onClick={ () => {}  }>
+	 <Menu.Item key="2" onClick={ () => {}  }>
       <span>
         <div className="d-flex align-items-center">
 			<a href='https://app.zerion.io/invest/asset/TAC-0xdeeb6091a5adc78fa0332bee5a38a8908b6b566e' target="_blank">
@@ -71,7 +65,7 @@ const WalletWidget = ({tacBalance, USDCTACpair, userInfo}) => {
     const userName = userInfo && userInfo.name	
 
 	return (
-		<Card title={`${userName}'s Wallet`} description='헬로?'  extra={CardDropdown(WalletWidgetOption)}>
+		<Card title={`${userName}'s Wallet`} description='헬로?'  extra={CardDropdown(WalletWidgetOption())}>
 			<div className= 'd-flex mt-0'>
 				<div>
 						<div className="d-flex align-items-center">	
@@ -84,11 +78,13 @@ const WalletWidget = ({tacBalance, USDCTACpair, userInfo}) => {
 								: <LoadingOutlined className = 'ml-3' style={{ fontSize: 24, color:'#1cc760'}} spin />
 							} 	
 						</div>
-				    <div className="text-gray-light mt-0"> 
-						    <Button danger type="text" style={{padding: '0px', margin: '0px'}}>
-							 	{userInfo && <a href={`https://rinkeby.etherscan.io/address/${userInfo.walletAddress}`} className="text-muted" target="_blank">{userInfo.walletAddress}</a>   }
-							</Button>
-				    </div>
+				  
+						{userInfo &&  
+						<Typography.Link  className="text-gray-light mt-0" 
+							type="secondary" href={`https://rinkeby.etherscan.io/address/${userInfo.walletAddress}`} target="_blank" copyable>
+						 {userInfo.walletAddress}
+						</Typography.Link>	 }		
+			
 				</div>
 			</div>
 			<div className="mt-3">

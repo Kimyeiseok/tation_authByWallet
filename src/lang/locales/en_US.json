@@ -3,10 +3,13 @@
 	"Match" : "Match",
 	"Reporting Match" :"Reporting Match",
 	"Match To Confirm" : "Match To Confirm",
+	"Wallet" : "Wallet",
+	"Userlist": "Userlist",
+	
 	
 	"sidenav.dashboard": "Dashboard",
 	"sidenav.dashboard.wallet": "Wallet",
-		"sidenav.dashboard.match" : "Match",
+	"sidenav.dashboard.match" : "Match",
 
 	"sidenav.apps": "Apps",
 	"sidenav.apps.mail": "Mail",

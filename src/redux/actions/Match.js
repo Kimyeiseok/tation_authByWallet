@@ -4,11 +4,43 @@ import {
 	APPROVE_PROPOSED_MATCH,
 	PROPOSE_MATCH,
 	TEST,
+	GET_ALL_APPROVED_MATCHES,
+	ALL_APPROVED_MATCHES,
+	MY_APPROVED_MATCHES,
+	GET_MY_APPROVED_MATCHES,
 } from '../constants/Match';
 
-export function test(payload) {
+export function test(address) {
   return {
     type: TEST,
+    address
+  };
+}
+
+export function getAllApprovedMatches(payload) {
+  return {
+    type: GET_ALL_APPROVED_MATCHES,
+    payload
+  };
+}
+
+export function allApprovedMatches(payload) {
+  return {
+    type: ALL_APPROVED_MATCHES,
+    payload
+  };
+}
+
+export function getMyApprovedMatches(address) {
+  return {
+    type: GET_MY_APPROVED_MATCHES,
+    address
+  };
+}
+
+export function myApprovedMatches(payload) {
+  return {
+    type: MY_APPROVED_MATCHES,
     payload
   };
 }

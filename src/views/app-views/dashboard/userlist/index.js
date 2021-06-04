@@ -1,5 +1,6 @@
 import React, {useEffect} from 'react'
 import ReactDOM from 'react-dom';
+import { Row, Col } from 'antd';
 import algoliasearch from 'algoliasearch/lite';
 import { InstantSearch, SearchBox, Hits } from 'react-instantsearch-dom';
 import CustomSearchBox from './CustomSearchBox'
@@ -14,10 +15,14 @@ const searchClient = algoliasearch(ALGOLIA_ID, ALGOLIA_SEACRCH_KEY);
 
 const Userlist = () => {
 	return (
-	  <InstantSearch indexName={ALGOLIA_INDEX_NAME} searchClient={searchClient}>
-		<CustomSearchBox />
-        <CustomHits />
-	  </InstantSearch>
+	 <Row  justify="center" gutter={16}>
+      	<Col xs={24} sm={24} md={24} lg={24}>	
+		  <InstantSearch indexName={ALGOLIA_INDEX_NAME} searchClient={searchClient}>
+			<CustomSearchBox />
+			<CustomHits />
+		  </InstantSearch>
+		</Col>					 
+    </Row>			
 	)
 }
 

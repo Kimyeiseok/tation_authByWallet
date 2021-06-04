@@ -1,10 +1,13 @@
 import React , {useEffect, useState} from "react";
-import { Card, Table, Tag, Tooltip, message, Button } from 'antd';
+import { Card, Table, Tag, Tooltip, message, Button, Modal } from 'antd';
 import { useSelector, useDispatch } from 'react-redux'
 import { AUTH_TOKEN,} from 'redux/constants/Auth'; 
 import { CoopDataContract } from 'services/AddAndABI'
+import { getWalletBalance}  from 'redux/actions/Uniswap'
 import {getProposedMatch, approveMatchToconfirm} from 'redux/actions/Match'
 import AvatarStatus from 'components/shared-components/AvatarStatus';
+import UserCard from 'components/shared-components/UserCard';
+import {notEnoughTACNotification} from 'components/shared-components/notifications'
 import md5 from 'md5'
 import {
   CheckCircleOutlined,
@@ -13,16 +16,25 @@ import {
   ExclamationCircleOutlined,
   ClockCircleOutlined,
   MinusCircleOutlined,
+	LoadingOutlined
 } from '@ant-design/icons';
-
+import { db } from 'auth/FirebaseAuth';
+import FirebaseService from 'services/FirebaseService'
 
 const ConfirmScreen = () => {
-	const userInfo = useSelector(state => state.auth.userInfo)
+	//const userInfo = useSelector(state => state.auth.userInfo)
 	const proposedMatchToConfirm = useSelector(state => state.match.proposedMatchToConfirm)
+	const tacBalance = useSelector(state => state.uniswap.tacBalance)	
 	const dispatch = useDispatch()
 	const address =  localStorage.getItem(AUTH_TOKEN);
     const [loading, setLoading] = useState(true)
-    
+	
+    const [isModalVisible, setIsModalVisible] = useState(false)
+	const handleCancel = () => {setIsModalVisible(false);};
+
+	useEffect(()=>{	
+		dispatch(getWalletBalance(address))	
+	},[])
 
 	useEffect(()=>{
 		dispatch(getProposedMatch(address))
@@ -56,28 +68,33 @@ const columns = [
     title: 'Contract',
     dataIndex: '',
     key: 'x',
-    render: (_, data) => {
-
+    render:  (_, data) => {
+		
+		 
         const isUserWinner = data.clientAddress.toLowerCase() == data.winner.toLowerCase() ? true : false
 		const winnerTx = data.winnerTx
 		const loserTx = data.loserTx
 		const onClick = async () => {
-			//dispatch(approveMatchToconfirm(data.clientAddress, data.id,  message))
-			await CoopDataContract.approveProposedMatch(data.clientAddress, data.id, isUserWinner, message)
-		}
+				if(tacBalance < 10){
+					notEnoughTACNotification(tacBalance)
+				}else{
+					setIsModalVisible(true)
+					await CoopDataContract.approveProposedMatch(data.clientAddress, data.id, isUserWinner, setIsModalVisible)	
+				}				
+			}
 		
 		
         if(isUserWinner){
 			if(winnerTx){
 				return( <Button type="primary"  size='small' danger onClick={onClick} >Confirm Again</Button>)
 			}else{
-				return( <Button type="primary" size='small' onClick={onClick}>Confirm</Button>)
+				return( <Button type="primary" size='small' onClick={onClick} >Confirm</Button>)
 			}		
 		}else {
 			if(loserTx){
-				return( <Button type="primary" size='small' danger onClick={onClick}>Confirm Again</Button>)
+				return( <Button type="primary" size='small' danger onClick={onClick} >Confirm Again</Button>)
 			}else{
-				return( <Button type="primary" size='small' onClick={onClick}>Confirm</Button>)
+				return( <Button type="primary" size='small' onClick={onClick} >Confirm</Button>)
 			}		
 		}
 
@@ -87,19 +104,23 @@ const columns = [
 	title: 'Winner',
 	dataIndex: 'winner',
 	key: 'winner',
-    render: item => {
+    render: (item, data) => {
 
-        let src = `http://gravatar.com/avatar/${md5(item.toLowerCase())}?d=identicon`   //나중에 파이어스토어 유저 정보에서 프로필 사진 불러오도록 변경해야함
+        // let src = `http://gravatar.com/avatar/${md5(item.toLowerCase())}?d=identicon`   //나중에 파이어스토어 유저 정보에서 프로필 사진 불러오도록 변경해야함
 		let address_short = item.substring(0,6) + '...' + item.substring(38,42)
+
+		
 		return(
 		<div className="d-flex">
-			<AvatarStatus src={src} name={address_short} subTitle={address_short}/>
+			<AvatarStatus src={data.winnerInfo.profileImage} name={address_short} subTitle={data.winnerInfo.name}/>
 		</div>
 		)
+		
+		
 	}		 
   },
   {
-	title: 'Points',
+	title: 'Score',
 	dataIndex: 'winnerPoints',
 	key: 'winnerPoints',
   },
@@ -135,19 +156,19 @@ const columns = [
 	title: 'Loser',
 	dataIndex: 'loser',
 	key: 'loser',
-    render: item => {
+    render: (item, data) => {
 
-        let src = `http://gravatar.com/avatar/${md5(item.toLowerCase())}?d=identicon`   //나중에 파이어스토어 유저 정보에서 프로필 사진 불러오도록 변경해야함
+        // let src = `http://gravatar.com/avatar/${md5(item.toLowerCase())}?d=identicon`   //나중에 파이어스토어 유저 정보에서 프로필 사진 불러오도록 변경해야함
 		let address_short = item.substring(0,6) + '...' + item.substring(38,42)
 		return(
 		<div className="d-flex">
-			<AvatarStatus src={src} name={address_short} subTitle={address_short}/>
+			<AvatarStatus src={data.loserInfo.profileImage} name={address_short} subTitle={data.loserInfo.name}/>
 		</div>
 		)
 	}		  
   },
   {
-	title: 'Points',
+	title: 'Score',
 	dataIndex: 'loserPoints',
 	key: 'loserPoints',
   },
@@ -181,12 +202,12 @@ const columns = [
 	title: 'Referee',
 	dataIndex: 'referee',
 	key: 'referee',
-	  render: item => {
-        let src = `http://gravatar.com/avatar/${md5(item)}?d=identicon`   //나중에 파이어스토어 유저 정보에서 프로필 사진 불러오도록 변경해야함
+	  render: (item, data) => {
+        // let src = `http://gravatar.com/avatar/${md5(item)}?d=identicon`   //나중에 파이어스토어 유저 정보에서 프로필 사진 불러오도록 변경해야함
 		let address_short = item.substring(0,6) + '...' + item.substring(38,42)
 		return(
 		<div className="d-flex">
-			<AvatarStatus src={src} name={address_short} subTitle={address_short}/>
+			<AvatarStatus src={data.refereeInfo.profileImage} name={address_short} subTitle={data.refereeInfo.name}/>
 		</div>
 		)
 	}		 
@@ -196,7 +217,15 @@ const columns = [
 	
 	return (
 		<>
-			 <Table columns={columns} dataSource={proposedMatchToConfirm} rowKey='id' loading={loading} />
+			 <Table columns={columns} dataSource={proposedMatchToConfirm} scroll={{ x: 900, }} rowKey='id' loading={loading} />
+			<Modal title="Wallet Connect" 
+			   visible={isModalVisible} 
+			   onCancel={handleCancel}  
+				centered={true} maskClosable={false}
+		       footer={[<Button key="Cancle" onClick={handleCancel}> Cancel </Button>]}
+			>
+              <p><LoadingOutlined /> Connect Portis to TACTION to proceed</p>
+        	</Modal>
 		</>
 	)
 }

@@ -67,7 +67,6 @@ export const LoginForm = props => {
 				onFinish={onLogin}
 			>
 				<ConnectToPortis />
-				<ConnectToMetamask />
 			</Form>
 		</>
 	)

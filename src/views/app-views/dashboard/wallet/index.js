@@ -19,7 +19,7 @@ import {
 
 const Wallet = () => {
 	const {userInfo} = useSelector(state => state.auth)
-	const {USDCTACpair, USDCWETHPair, TACWETHPair, tacBalance, etherBalance} = useSelector(state => state.uniswap)	
+	const {USDCTACpair, USDCWETHPair, TACWETHPair, tacBalance, etherBalance, tacLockedBalance} = useSelector(state => state.uniswap)	
 	
     const dispatch = useDispatch()
 
@@ -50,7 +50,7 @@ const Wallet = () => {
 		</Row>			
 		<Row justify="center" gutter={16}>
 			<Col xs={24} sm={24} md={24} lg={8}>	
-				<AssetWidget USDCTACpair={USDCTACpair} USDCWETHPair={USDCWETHPair}  TACWETHPair={TACWETHPair}  tacBalance={tacBalance} etherBalance={etherBalance}/>
+				<AssetWidget USDCTACpair={USDCTACpair} USDCWETHPair={USDCWETHPair}  TACWETHPair={TACWETHPair}  tacBalance={tacBalance} etherBalance={etherBalance} tacLockedBalance={tacLockedBalance}/>
 			</Col>	
 		</Row>
 		<Row justify="center" gutter={16}>
